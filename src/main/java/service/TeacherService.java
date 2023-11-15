@@ -50,8 +50,30 @@ public class TeacherService implements PersonService<Teacher> {
 
     @Override
     public void update(Teacher teacher) {
+        System.out.println("Teacher's code : ");
+        int teacherCode = scanner.nextInt();
+        boolean contains = teacherRepository.contains(teacherCode);
+        if (contains) {
+            Teacher updatedTeacher = new Teacher();
+            System.out.println("Firstname: ");
+            updatedTeacher.setFirstName(scanner.next());
+            System.out.println("Lastname: ");
+            updatedTeacher.setLastName(scanner.next());
+            System.out.println("Date of birth: ");
+            updatedTeacher.setDOB(scanner.next());
+            System.out.println("Teacher degree: ");
+            updatedTeacher.setTeachersDegree(teachersDegree.valueOf(scanner.next().toUpperCase(Locale.ROOT)));
+            System.out.println("Teacher rate: ");
+            updatedTeacher.setTeachersRate(teachersRate.valueOf(scanner.next().toUpperCase(Locale.ROOT)));
+            System.out.println("Salary: ");
+            updatedTeacher.setSalary(scanner.nextInt());
 
+            teacherRepository.update(teacherCode, updatedTeacher);
+        } else {
+            System.out.println("Teacher with code " + teacherCode + " does not exist.");
+        }
     }
+
 
     @Override
     public void delete() {

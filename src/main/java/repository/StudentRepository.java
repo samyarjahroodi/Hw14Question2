@@ -3,7 +3,6 @@ package repository;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import model.Student;
-import model.Teacher;
 
 import static sessionFactory.SessionFactory.getSessionFactory;
 
@@ -22,13 +21,25 @@ public class StudentRepository implements PersonRepository<Student> {
         }
     }
 
+
     @Override
-    public void update(Student student) {
+    public void update(long studentsCode, Student student) {
         try {
             session.beginTransaction();
-            session.update(student);
+            Query query = session.createQuery("UPDATE Student SET firstName = :newFirstName, " +
+                    "lastName = :newLastName, DOB = :newDOB, field = :newField, entranceYear = :newEntranceYear " +
+                    "WHERE studentsCode = :studentsCode");
+
+            query.setParameter("newFirstName", student.getFirstName());
+            query.setParameter("newLastName", student.getLastName());
+            query.setParameter("newDOB", student.getDOB());
+            query.setParameter("newField", student.getField());
+            query.setParameter("newEntranceYear", student.getEntranceYear());
+            query.setParameter("studentsCode", studentsCode);
+
+            int updatedCount = query.executeUpdate();
             session.getTransaction().commit();
-            System.out.println("Student updated successfully");
+            System.out.println(updatedCount + " student(s) updated successfully");
         } catch (Exception e) {
             e.printStackTrace();
             session.getTransaction().rollback();
@@ -69,7 +80,7 @@ public class StudentRepository implements PersonRepository<Student> {
     }
 
     @Override
-    public boolean contains(int studentCode) {
+    public boolean contains(long studentCode) {
         try {
             session.beginTransaction();
             Query<Student> query = session.createQuery("FROM Student WHERE studentsCode = :studentCode", Student.class);

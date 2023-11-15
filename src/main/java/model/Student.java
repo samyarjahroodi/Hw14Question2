@@ -13,10 +13,8 @@ import javax.persistence.Version;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student extends Person {
-    @Version
-    private long version;
     @NotNull
-    private int studentsCode;
+    private long studentsCode;
     @NotNull
     private String field;
     @NotNull

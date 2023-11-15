@@ -36,26 +36,28 @@ public class StudentService implements PersonService<Student> {
 
     @Override
     public void update(Student student) {
-        System.out.println("Firstname : ");
-        String firstname = scanner.next();
-        student.setFirstName(firstname);
-        System.out.println("Lastname : ");
-        String lastname = scanner.next();
-        student.setLastName(lastname);
-        System.out.println("Date of birth : ");
-        String dateOfBirth = scanner.next();
-        student.setDOB(dateOfBirth);
-        System.out.println("Student code : ");
+        System.out.println("Student's code: ");
         int studentCode = scanner.nextInt();
-        student.setStudentsCode(studentCode);
-        System.out.println("Student field");
-        String studentField = scanner.next();
-        student.setField(studentField);
-        System.out.println("Entrance year");
-        int entranceYear = scanner.nextInt();
-        student.setEntranceYear(entranceYear);
-        studentRepository.update(student);
+        boolean contains = studentRepository.contains(studentCode);
+        if (contains) {
+            Student updatedStudent = new Student();
+            System.out.println("Firstname: ");
+            updatedStudent.setFirstName(scanner.next());
+            System.out.println("Lastname: ");
+            updatedStudent.setLastName(scanner.next());
+            System.out.println("Date of birth: ");
+            updatedStudent.setDOB(scanner.next());
+            System.out.println("Student field: ");
+            updatedStudent.setField(scanner.next());
+            System.out.println("Entrance year: ");
+            updatedStudent.setEntranceYear(scanner.nextInt());
+
+            studentRepository.update(studentCode, updatedStudent);
+        } else {
+            System.out.println("Student with code " + studentCode + " does not exist.");
+        }
     }
+
 
     @Override
     public void delete() {

@@ -16,7 +16,7 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 public class Teacher extends Person {
     @NotNull
-    private int teachersCode;
+    private long teachersCode;
 
     @Enumerated(EnumType.STRING)
     @NotNull

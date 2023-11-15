@@ -23,16 +23,33 @@ public class TeacherRepository implements PersonRepository<Teacher> {
     }
 
     @Override
-    public void update(Teacher teacher) {
+    public void update(long teacherCode, Teacher updatedTeacher) {
         try {
             session.beginTransaction();
-            session.update(teacher);
+            Query query = session.createQuery("UPDATE Teacher SET firstName = :newFirstName, " +
+                    "lastName = :newLastName, DOB = :newDOB, " +
+                    "teachersCode = :newTeachersCode, teachersDegree = :newTeachersDegree, " +
+                    "teachersRate = :newTeachersRate, salary = :newSalary WHERE teachersCode = :teacherId");
+
+            query.setParameter("newFirstName", updatedTeacher.getFirstName());
+            query.setParameter("newLastName", updatedTeacher.getLastName());
+            query.setParameter("newDOB", updatedTeacher.getDOB());
+            query.setParameter("newTeachersCode", updatedTeacher.getTeachersCode());
+            query.setParameter("newTeachersDegree", updatedTeacher.getTeachersDegree());
+            query.setParameter("newTeachersRate", updatedTeacher.getTeachersRate());
+            query.setParameter("newSalary", updatedTeacher.getSalary());
+            query.setParameter("teacherId", (long)teacherCode);
+
+            int updatedCount = query.executeUpdate();
             session.getTransaction().commit();
+            System.out.println(updatedCount + " teacher(s) updated successfully");
         } catch (Exception e) {
             e.printStackTrace();
             session.getTransaction().rollback();
         }
     }
+
+
 
     @Override
     public void deleteById(long id) {
@@ -68,7 +85,7 @@ public class TeacherRepository implements PersonRepository<Teacher> {
     }
 
     @Override
-    public boolean contains(int teacherCode) {
+    public boolean contains(long teacherCode) {
         try {
             session.beginTransaction();
             Query<Teacher> query = session.createQuery("FROM Teacher WHERE teachersCode = :teacherCode", Teacher.class);
